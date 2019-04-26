@@ -1,6 +1,6 @@
 #!/bin/bash
 
-patch -p1 < ./patches/putty-url-0.71.patch
+#patch -p1 < ./patches/putty-url-0.71.patch
 
 ./mkfiles.pl
 

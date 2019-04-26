@@ -12,7 +12,6 @@
 #include "sshgss.h"
 #endif
 #include "urlhack.h"
-#include <versionhelpers.h>
 
 
 /* The cipher order given here is the default order. */
@@ -1117,11 +1116,7 @@ void load_open_settings(settings_r *sesskey, Conf *conf)
     gppfont(sesskey, "Font", conf, CONF_font);
 
     /* HACK: PuTTY-url: Set font quality to cleartype on Windows Vista and higher */
-    if (IsWindowsVistaOrGreater()) {
-        gppi(sesskey, "FontQuality", FQ_CLEARTYPE, conf, CONF_font_quality);
-    } else {
-        gppi(sesskey, "FontQuality", FQ_DEFAULT, conf, CONF_font_quality);
-    }
+    gppi(sesskey, "FontQuality", FQ_CLEARTYPE, conf, CONF_font_quality);
 
     gppi(sesskey, "FontVTMode", VT_UNICODE, conf, CONF_vtmode);
     gppb(sesskey, "UseSystemColours", false, conf, CONF_system_colour);
