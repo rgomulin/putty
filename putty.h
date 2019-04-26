@@ -1501,10 +1501,10 @@ NORETURN void cleanup_exit(int);
     X(BOOL, NONE, crhaslf) \
     X(STR, NONE, winclass) \
     /* HACK: PuTTY-url settings */ \
-    X(INT, NONE, url_ctrl_click) \
+    X(BOOL, NONE, url_ctrl_click) \
     X(INT, NONE, url_underline) \
-    X(INT, NONE, url_defbrowser) \
-    X(INT, NONE, url_defregex) \
+    X(BOOL, NONE, url_defbrowser) \
+    X(BOOL, NONE, url_defregex) \
     X(FILENAME, NONE, url_browser) \
     X(STR, NONE, url_regex) \
     /* end of list */

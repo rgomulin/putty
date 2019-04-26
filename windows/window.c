@@ -888,7 +888,7 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE prev, LPSTR cmdline, int show)
 	 * HACK: PuttyTray / Nutty
 	 * Hyperlink stuff: Set the regular expression
 	 */
-	if (conf_get_int(term->conf, CONF_url_defregex) == 0) {
+	if (conf_get_bool(term->conf, CONF_url_defregex) == 0) {
 		urlhack_set_regular_expression(conf_get_str(term->conf, CONF_url_regex));
 	}
 
@@ -2418,7 +2418,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 		 * HACK: PuttyTray / Nutty
 		 * Reconfigure
 		 */
-		if (conf_get_int(conf, CONF_url_defregex) == 0) {
+		if (conf_get_bool(conf, CONF_url_defregex) == 0) {
 			urlhack_set_regular_expression(conf_get_str(conf, CONF_url_regex));
 		}
 		term->url_update = TRUE;
@@ -2756,7 +2756,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 		urlhack_mouse_old_x = TO_CHR_X(X_POS(lParam));
 		urlhack_mouse_old_y = TO_CHR_Y(Y_POS(lParam));
 
-		if ((!conf_get_int(term->conf, CONF_url_ctrl_click) || urlhack_is_ctrl_pressed()) &&
+		if ((!conf_get_bool(term->conf, CONF_url_ctrl_click) || urlhack_is_ctrl_pressed()) &&
 			urlhack_is_in_link_region(urlhack_mouse_old_x, urlhack_mouse_old_y)) {
 				if (urlhack_cursor_is_hand == 0) {
 					SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)LoadCursor(NULL, IDC_HAND));
@@ -3254,7 +3254,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 	return false;
       case WM_KEYDOWN:
 	/* HACK: PuTTY-url: Change cursor if we are in ctrl+click link mode (spans multiple switch cases) */
-		if (wParam == VK_CONTROL && conf_get_int(term->conf, CONF_url_ctrl_click)) {
+		if (wParam == VK_CONTROL && conf_get_bool(term->conf, CONF_url_ctrl_click)) {
 			GetCursorPos(&cursor_pt);
 			ScreenToClient(hwnd, &cursor_pt);
 
@@ -3267,7 +3267,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT message,
 		}	
       case WM_SYSKEYDOWN:
       case WM_KEYUP:
-		if (wParam == VK_CONTROL && conf_get_int(term->conf, CONF_url_ctrl_click)) {
+		if (wParam == VK_CONTROL && conf_get_bool(term->conf, CONF_url_ctrl_click)) {
 			SetCursor(LoadCursor(NULL, IDC_IBEAM));
 			term_update(term);
 		}

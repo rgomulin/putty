@@ -5237,7 +5237,7 @@ static void do_paint(Terminal *term)
 
     int urlhack_underline =
         conf_get_int(term->conf, CONF_url_underline) == URLHACK_UNDERLINE_ALWAYS ||
-        (conf_get_int(term->conf, CONF_url_underline) == URLHACK_UNDERLINE_HOVER && (!conf_get_int(term->conf, CONF_url_ctrl_click) || urlhack_is_ctrl_pressed())) ? 1 : 0;
+        (conf_get_int(term->conf, CONF_url_underline) == URLHACK_UNDERLINE_HOVER && (!conf_get_bool(term->conf, CONF_url_ctrl_click) || urlhack_is_ctrl_pressed())) ? 1 : 0;
 
     int urlhack_is_link = 0, urlhack_hover_current = 0;
     int urlhack_toggle_x = term->cols, urlhack_toggle_y = term->rows;
@@ -6628,7 +6628,7 @@ void term_mouse(Terminal *term, Mouse_Button braw, Mouse_Button bcooked,
 	deselect(term);
 	term->selstate = NO_SELECTION;
 
-	if ((!conf_get_int(term->conf, CONF_url_ctrl_click) || (conf_get_int(term->conf, CONF_url_ctrl_click) && urlhack_is_ctrl_pressed())) && urlhack_is_in_link_region(x, y)) {
+	if ((!conf_get_bool(term->conf, CONF_url_ctrl_click) || (conf_get_bool(term->conf, CONF_url_ctrl_click) && urlhack_is_ctrl_pressed())) && urlhack_is_in_link_region(x, y)) {
 		int i;
 		char *linkbuf = NULL;
 		text_region region = urlhack_get_link_bounds(x, y);
@@ -6665,7 +6665,7 @@ void term_mouse(Terminal *term, Mouse_Button braw, Mouse_Button bcooked,
 			unlineptr(urldata);
 		}
 		
-		urlhack_launch_url(!conf_get_int(term->conf, CONF_url_defbrowser) ? conf_get_filename(term->conf, CONF_url_browser)->path : NULL, linkbuf);
+		urlhack_launch_url(!conf_get_bool(term->conf, CONF_url_defbrowser) ? conf_get_filename(term->conf, CONF_url_browser)->path : NULL, linkbuf);
 		
 		sfree(linkbuf);
 	}
