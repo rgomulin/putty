@@ -11,6 +11,7 @@
 #include "sshgssc.h"
 #include "sshgss.h"
 #endif
+#include "urlhack.h"
 
 
 /* The cipher order given here is the default order. */
@@ -779,6 +780,14 @@ void save_open_settings(settings_w *sesskey, Conf *conf)
     write_setting_b(sesskey, "ConnectionSharingUpstream", conf_get_bool(conf, CONF_ssh_connection_sharing_upstream));
     write_setting_b(sesskey, "ConnectionSharingDownstream", conf_get_bool(conf, CONF_ssh_connection_sharing_downstream));
     wmap(sesskey, "SSHManualHostKeys", conf, CONF_ssh_manual_hostkeys, false);
+
+    /* PuTTY-url */
+    write_setting_i(sesskey, "HyperlinkUnderline", conf_get_int(conf, CONF_url_underline));
+    write_setting_i(sesskey, "HyperlinkUseCtrlClick", conf_get_int(conf, CONF_url_ctrl_click));
+    write_setting_i(sesskey, "HyperlinkBrowserUseDefault", conf_get_int(conf, CONF_url_defbrowser));
+    write_setting_filename(sesskey, "HyperlinkBrowser", conf_get_filename(conf, CONF_url_browser));
+    write_setting_i(sesskey, "HyperlinkRegularExpressionUseDefault", conf_get_int(conf, CONF_url_defregex));
+    write_setting_s(sesskey, "HyperlinkRegularExpression", conf_get_str(conf, CONF_url_regex));
 }
 
 bool load_settings(const char *section, Conf *conf)
@@ -1093,7 +1102,7 @@ void load_open_settings(settings_r *sesskey, Conf *conf)
 		 / 1000
 #endif
 		 );
-    gppi(sesskey, "ScrollbackLines", 2000, conf, CONF_savelines);
+    gppi(sesskey, "ScrollbackLines", 100000, conf, CONF_savelines); // HACK: PuTTY-url
     gppb(sesskey, "DECOriginMode", false, conf, CONF_dec_om);
     gppb(sesskey, "AutoWrapMode", true, conf, CONF_wrap_mode);
     gppb(sesskey, "LFImpliesCR", false, conf, CONF_lfhascr);
@@ -1105,7 +1114,10 @@ void load_open_settings(settings_r *sesskey, Conf *conf)
     gppi(sesskey, "TermWidth", 80, conf, CONF_width);
     gppi(sesskey, "TermHeight", 24, conf, CONF_height);
     gppfont(sesskey, "Font", conf, CONF_font);
-    gppi(sesskey, "FontQuality", FQ_DEFAULT, conf, CONF_font_quality);
+
+    /* HACK: PuTTY-url: Set font quality to cleartype on Windows Vista and higher */
+    gppi(sesskey, "FontQuality", FQ_CLEARTYPE, conf, CONF_font_quality);
+
     gppi(sesskey, "FontVTMode", VT_UNICODE, conf, CONF_vtmode);
     gppb(sesskey, "UseSystemColours", false, conf, CONF_system_colour);
     gppb(sesskey, "TryPalette", false, conf, CONF_try_palette);
@@ -1244,6 +1256,14 @@ void load_open_settings(settings_r *sesskey, Conf *conf)
     gppb(sesskey, "ConnectionSharingDownstream", true,
          conf, CONF_ssh_connection_sharing_downstream);
     gppmap(sesskey, "SSHManualHostKeys", conf, CONF_ssh_manual_hostkeys);
+
+    /* PuTTY-url */
+    gppi(sesskey, "HyperlinkUnderline", 1, conf, CONF_url_underline);
+    gppi(sesskey, "HyperlinkUseCtrlClick", 0, conf, CONF_url_ctrl_click);
+    gppi(sesskey, "HyperlinkBrowserUseDefault", 1, conf, CONF_url_defbrowser);
+    gppfile(sesskey, "HyperlinkBrowser", conf, CONF_url_browser);
+    gppi(sesskey, "HyperlinkRegularExpressionUseDefault", 1, conf, CONF_url_defregex);
+    gpps(sesskey, "HyperlinkRegularExpression", urlhack_default_regex, conf, CONF_url_regex);
 }
 
 bool do_defaults(const char *session, Conf *conf)

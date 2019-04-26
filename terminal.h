@@ -344,6 +344,8 @@ struct terminal_tag {
     int mouse_select_clipboards[N_CLIPBOARDS];
     int n_mouse_select_clipboards;
     int mouse_paste_clipboard;
+
+    int url_update; /* HACK: PuTTY-url */
 };
 
 static inline bool in_utf(Terminal *term)
